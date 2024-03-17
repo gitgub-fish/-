@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>轮播图</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+  }
+
+  .carousel-slide img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;/* 把全部图片透明 */
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .carousel-slide img.active {
+    opacity: 1; /* 让其显示当前活动的图片，让具有active类名的第一张图片不透明度为一 */
+  }
+
+  .dots-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 5px;
+    background-color: #ddd;
+    border-radius: 50%;
+    transition: background-color 0.6s ease;
+  }
+
+  .dot.active {
+    background-color: black;
+  }
+
+  /* 添加：左右按钮样式 */ 
+  .prev-btn{
+	  position: absolute;
+	  bottom: 110px;
+	  left: 10%;
+	  transform: translateX(-50%);
+	  display: flex;
+	  justify-content: space-between;
+	  width: 60px;
+	  height: 60px;
+	  opacity: 0.6;
+	  font-size:45px;
+  }
+  .next-btn{
+	  position: absolute;
+	  bottom: 110px;
+	  right: 8%;
+	  transform: translateX(-50%);
+	  display: flex;
+	  justify-content: space-between;
+	  width: max-content;
+	  width: 60px;
+	  height: 60px;
+	  opacity: 0.6;
+	  font-size:45px;
+  }
+</style>
+</head>
+<body>
+
+<div class="carousel-container">
+  <div class="carousel-slide">
+    <!-- 为图片添加 active 类，初始时第一张直接设置为不透明，避免初始是空白的 -->
+    <img src="./img/ChMkJ1bKwleIEcuLAAtHTojgTk8AALGmgL0Ke0AC0dm716.jpg" alt="Image 1" class="active">
+    <img src="./img/ChMkJ1bKwleIeZAZAAptgm_QzxAAALGmgKi5SQACm2a020.jpg" alt="Image 2"><!-- src修改图片链接处 -->
+    <img src="./img/ChMkJlbKwleIEIH6AAp6SJUdFWEAALGmgKuV3AACnpg275.jpg" alt="Image 3">
+    <img src="./img/ChMkJlbKwliIALc3AA7o_JCbGH0AALGmgNpAL4ADukU965.jpg" alt="Image 4">
+  </div>
+  <div class="dots-container">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="controls-container">
+    <button class="prev-btn" ><-</button>
+    <button class="next-btn" >-></button>
+  </div><!-- 左右按键 -->
+</div>
+
+<script>
+  const carouselSlide = document.querySelector('.carousel-slide');
+  const images = carouselSlide.querySelectorAll('img');
+  const dotsContainer = document.querySelectorAll('.dot');
+  let currentSlide = 0;//记录每次轮播的索引
+
+  function changeSlide(direction) {
+    if (direction === 'next') {
+      currentSlide = (currentSlide + 1) % images.length;
+    } else if (direction === 'prev') {
+      currentSlide = (currentSlide - 1 + images.length) % images.length;
+    }//可重置let currentSlide对应的值并实现无缝功能
+    // 更新图片状态，让不透明度为1的图片与当前索引保持一致
+    images.forEach((img, index) => {
+      img.classList.toggle('active', index === currentSlide);
+    });
+    // 高亮当前活动的点
+    dotsContainer.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentSlide);
+    });
+  }
+
+
+  // 点击圆点切换图片
+  dotsContainer.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      currentSlide = index;
+      changeSlide('jump');
+    });
+  });
+
+  // 自动轮播功能（每3.6秒自动切换到下一张）
+  setInterval(() => {
+    changeSlide('next');
+  }, 3600);
+  
+  // 左右按键事件监听
+  const prevBtn = document.querySelector('.prev-btn');
+  const nextBtn = document.querySelector('.next-btn');
+
+  prevBtn.addEventListener('click', () => {
+    changeSlide('prev');
+  });
+
+  nextBtn.addEventListener('click', () => {
+    changeSlide('next');
+  });
+</script>
+</body>
+</html>
